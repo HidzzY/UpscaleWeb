@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upscale Image</title>
+    <title>Hidz - UpscaleImage</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
+        tailwind.config = { darkMode: 'class' }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen">
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors">
 
     <nav class="sticky top-0 z-50 backdrop-blur-md border-b border-slate-200/50 dark:border-white/5">
         <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
@@ -24,7 +22,7 @@
                 <span class="font-bold text-2xl tracking-tight uppercase italic">Hidz<span class="text-blue-600">Scale</span></span>
             </div>
             
-            <button id="themeToggle" class="group p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-blue-500 transition-all shadow-sm">
+            <button id="themeToggle" class="group p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-blue-500 transition-all">
                 <i data-lucide="sun" id="sunIcon" class="w-5 h-5 group-hover:rotate-45 transition-transform"></i>
                 <i data-lucide="moon" id="moonIcon" class="hidden w-5 h-5 group-hover:-rotate-12 transition-transform"></i>
             </button>
@@ -37,30 +35,25 @@
                 Tingkatkan Kualitas <br>
                 <span class="gradient-text">Gambar Anda</span>
             </h1>
-            <p class="text-slate-500 dark:text-slate-400 text-xl max-w-2xl mx-auto font-medium">
-                Solusi cerdas untuk mengubah foto buram menjadi tajam dalam hitungan detik.
-            </p>
         </div>
 
         <div class="glass-card rounded-[2.5rem] p-4 md:p-10 mb-12">
             <div id="dropZone" class="group h-80 rounded-[2rem] border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center cursor-pointer mb-8 relative overflow-hidden">
                 <input type="file" id="fileInput" class="hidden" accept="image/*">
-                
                 <div class="bg-blue-50 dark:bg-blue-500/10 p-6 rounded-full mb-5 group-hover:scale-110 transition-transform">
                     <i data-lucide="image-plus" class="text-blue-600 w-10 h-10"></i>
                 </div>
-                
                 <h3 class="text-2xl font-bold mb-2">Upload Gambar</h3>
                 <p class="text-slate-400 font-medium">JPG, PNG atau WEBP (Max. 5MB)</p>
             </div>
 
-            <div id="processSection" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div id="processSection" class="hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                     <div class="space-y-4">
                         <div class="flex items-center gap-2 px-2 text-slate-500 uppercase text-xs font-bold tracking-widest">
                             <i data-lucide="history" class="w-4 h-4"></i> Sebelum/Before
                         </div>
-                        <div class="img-container shadow-inner">
+                        <div class="img-container">
                             <img id="inputPreview" class="w-full h-full object-contain p-2" src="" alt="Original">
                         </div>
                     </div>
@@ -69,28 +62,25 @@
                         <div class="flex items-center gap-2 px-2 text-blue-600 uppercase text-xs font-bold tracking-widest">
                             <i data-lucide="zap" class="w-4 h-4"></i> Hasil/After
                         </div>
-                        <div id="outputContainer" class="img-container shadow-inner">
+                        <div id="outputContainer" class="img-container">
                             <img id="outputImage" class="w-full h-full object-contain p-2 hidden" src="" alt="Result">
-                            
                             <div id="loadingState" class="hidden flex flex-col items-center gap-4">
                                 <span class="loader"></span>
-                                <p class="text-blue-600 font-bold animate-pulse">Proses Deer...</p>
+                                <p class="text-blue-600 font-bold animate-pulse">Memproses Gambar...</p>
                             </div>
-                            
                             <div id="placeholderText" class="text-slate-400 text-sm flex flex-col items-center gap-2">
                                 <i data-lucide="cpu" class="w-8 h-8 opacity-20"></i>
-                                <span class="italic font-medium">Klik tombol di bawah untuk memproses</span>
+                                <span class="italic">Klik tombol untuk memulai</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
                     <button id="upscaleBtn" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-40">
                         <i data-lucide="wand-2" class="w-5 h-5"></i> Gas Upscale
                     </button>
-                    <a id="downloadBtn" class="hidden bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/30">
+                    <a id="downloadBtn" class="hidden bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3">
                         <i data-lucide="download-cloud" class="w-5 h-5"></i> Download Hasil
                     </a>
                 </div>
@@ -110,23 +100,18 @@
         const moonIcon = document.getElementById('moonIcon');
 
         function updateTheme() {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            }
+            const isDark = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
+            sunIcon.classList.toggle('hidden', isDark);
+            moonIcon.classList.toggle('hidden', !isDark);
         }
         updateTheme();
 
         themeToggle.addEventListener('click', () => {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.theme = isDark ? 'dark' : 'light';
-            sunIcon.classList.toggle('hidden');
-            moonIcon.classList.toggle('hidden');
+            sunIcon.classList.toggle('hidden', isDark);
+            moonIcon.classList.toggle('hidden', !isDark);
         });
 
         const dropZone = document.getElementById('dropZone');
@@ -136,20 +121,6 @@
         let selectedFile = null;
 
         dropZone.onclick = () => fileInput.click();
-
-        ['dragover', 'dragenter'].forEach(e => {
-            dropZone.addEventListener(e, () => dropZone.classList.add('drop-zone--over'));
-        });
-        ['dragleave', 'dragend', 'drop'].forEach(e => {
-            dropZone.addEventListener(e, () => dropZone.classList.remove('drop-zone--over'));
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) handleFile(file);
-        });
-
         fileInput.onchange = (e) => handleFile(e.target.files[0]);
 
         function handleFile(file) {
@@ -161,35 +132,6 @@
             document.getElementById('placeholderText').classList.remove('hidden');
             document.getElementById('downloadBtn').classList.add('hidden');
             upscaleBtn.disabled = false;
-            
-            processSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        async function runUpscale(file) {
-            try {
-                const base64 = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.readAsDataURL(file);
-                });
-
-                const response = await fetch('/api/upscale', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        imageBase64: base64,
-                        filename: file.name
-                    })
-                });
-
-                if (!response.ok) throw new Error('Server sedang sibuk, coba sesaat lagi.');
-
-                const blob = await response.blob();
-                return URL.createObjectURL(blob);
-            } catch (error) {
-                alert('Waduh! ' + error.message);
-                return null;
-            }
         }
 
         upscaleBtn.onclick = async () => {
@@ -198,21 +140,38 @@
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('placeholderText').classList.add('hidden');
 
-            const resultUrl = await runUpscale(selectedFile);
+            try {
+                const reader = new FileReader();
+                reader.readAsDataURL(selectedFile);
+                reader.onload = async () => {
+                    const base64 = reader.result.split(',')[1];
+                    const response = await fetch('/api/upscale', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ imageBase64: base64, filename: selectedFile.name })
+                    });
 
-            document.getElementById('loadingState').classList.add('hidden');
-            if (resultUrl) {
-                const img = document.getElementById('outputImage');
-                img.src = resultUrl;
-                img.classList.remove('hidden');
-                const dl = document.getElementById('downloadBtn');
-                dl.href = resultUrl;
-                dl.download = `HidzScale_${Date.now()}.jpg`;
-                dl.classList.remove('hidden');
-            } else {
-                document.getElementById('placeholderText').classList.remove('hidden');
+                    if (!response.ok) throw new Error('Gagal memproses gambar.');
+
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    
+                    document.getElementById('loadingState').classList.add('hidden');
+                    const img = document.getElementById('outputImage');
+                    img.src = url;
+                    img.classList.remove('hidden');
+                    
+                    const dl = document.getElementById('downloadBtn');
+                    dl.href = url;
+                    dl.download = `HidzScale_${Date.now()}.jpg`;
+                    dl.classList.remove('hidden');
+                    upscaleBtn.disabled = false;
+                };
+            } catch (error) {
+                alert(error.message);
+                upscaleBtn.disabled = false;
+                document.getElementById('loadingState').classList.add('hidden');
             }
-            upscaleBtn.disabled = false;
         };
     </script>
 </body>
