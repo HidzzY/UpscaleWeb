@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Upscaler - Modern & Fast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .drop-zone--over { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .dark .glass { background: rgba(15, 23, 42, 0.8); border-color: rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen">
+
+    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
+        <div class="flex items-center gap-2">
+            <div class="bg-blue-600 p-2 rounded-lg">
+                <i data-lucide="maximize" class="text-white"></i>
+            </div>
+            <span class="font-bold text-xl tracking-tight">UP<span class="text-blue-600">SCALE</span></span>
+        </div>
+        <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+            <i data-lucide="sun" id="sunIcon"></i>
+            <i data-lucide="moon" id="moonIcon" class="hidden"></i>
+        </button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Tingkatkan Kualitas Gambar dengan AI</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-lg">Ubah gambar buram menjadi jernih secara instan.</p>
+        </div>
+
+        <div id="dropZone" class="glass rounded-3xl p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-all mb-8">
+            <input type="file" id="fileInput" class="hidden" accept="image/*">
+            <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full mb-4">
+                <i data-lucide="upload-cloud" class="text-blue-600 w-8 h-8"></i>
+            </div>
+            <p class="font-semibold text-lg">Klik atau seret gambar ke sini</p>
+            <p class="text-sm text-slate-400 mt-2">Mendukung JPG, PNG (Max 5MB)</p>
+        </div>
+
+        <div id="processSection" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-slate-500 uppercase tracking-wider text-center">Original</p>
+                    <div class="rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-800 h-64">
+                        <img id="inputPreview" class="w-full h-full object-contain" src="" alt="">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-slate-500 uppercase tracking-wider text-center">Hasil AI</p>
+                    <div id="outputContainer" class="rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-800 h-64 flex items-center justify-center relative">
+                        <img id="outputImage" class="w-full h-full object-contain hidden" src="" alt="">
+                        <div id="loadingState" class="hidden flex flex-col items-center gap-3">
+                            <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-600 border-t-transparent"></div>
+                            <p class="text-sm animate-pulse">Memproses AI...</p>
+                        </div>
+                        <div id="placeholderText" class="text-slate-400 text-sm italic">Menunggu...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button id="upscaleBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-105 disabled:opacity-50">
+                    Mulai Upscale
+                </button>
+                <a id="downloadBtn" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
+                    <i data-lucide="download" class="w-5 h-5"></i> Simpan
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('sunIcon').classList.add('hidden');
+            document.getElementById('moonIcon').classList.remove('hidden');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            document.getElementById('sunIcon').classList.toggle('hidden');
+            document.getElementById('moonIcon').classList.toggle('hidden');
+        });
+
+        // Image Processing Logic
+        const fileInput = document.getElementById('fileInput');
+        const upscaleBtn = document.getElementById('upscaleBtn');
+        let selectedFile = null;
+
+        document.getElementById('dropZone').onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                document.getElementById('inputPreview').src = URL.createObjectURL(file);
+                document.getElementById('processSection').classList.remove('hidden');
+                document.getElementById('outputImage').classList.add('hidden');
+                document.getElementById('placeholderText').classList.remove('hidden');
+                document.getElementById('downloadBtn').classList.add('hidden');
+                upscaleBtn.disabled = false;
+            }
+        };
+
+        async function runUpscale(file) {
+            try {
+                // Konversi file ke Base64
+                const base64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(file);
+                });
+
+                const response = await fetch('/api/upscale', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        imageBase64: base64,
+                        filename: file.name
+                    })
+                });
+
+                if (!response.ok) throw new Error('Gagal memproses gambar');
+
+                const blob = await response.blob();
+                return URL.createObjectURL(blob);
+            } catch (error) {
+                alert('Error: ' + error.message);
+                return null;
+            }
+        }
+
+        upscaleBtn.onclick = async () => {
+            if (!selectedFile) return;
+            upscaleBtn.disabled = true;
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('placeholderText').classList.add('hidden');
+
+            const resultUrl = await runUpscale(selectedFile);
+
+            document.getElementById('loadingState').classList.add('hidden');
+            if (resultUrl) {
+                const img = document.getElementById('outputImage');
+                img.src = resultUrl;
+                img.classList.remove('hidden');
+                const dl = document.getElementById('downloadBtn');
+                dl.href = resultUrl;
+                dl.download = `upscaled_${Date.now()}.jpg`;
+                dl.classList.remove('hidden');
+            }
+            upscaleBtn.disabled = false;
+        };
+    </script>
+</body>
+</html>
