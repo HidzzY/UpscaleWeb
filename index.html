@@ -6,6 +6,12 @@
     <title>AI Upscaler | Jernihkan Gambar Instan</title>
     <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // PENTING: Konfigurasi agar Tailwind mendukung ganti tema manual lewat class
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styl.css">
@@ -22,6 +28,7 @@
                 <span class="font-bold text-2xl tracking-tight uppercase italic">Hidz<span class="text-blue-600">Scale</span></span>
             </div>
             
+            <!-- Tombol Theme Toggle -->
             <button id="themeToggle" class="group p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-blue-500 transition-all shadow-sm">
                 <i data-lucide="sun" id="sunIcon" class="w-5 h-5 group-hover:rotate-45 transition-transform"></i>
                 <i data-lucide="moon" id="moonIcon" class="hidden w-5 h-5 group-hover:-rotate-12 transition-transform"></i>
@@ -54,9 +61,10 @@
                 <p class="text-slate-400 font-medium">JPG, PNG atau WEBP (Maks. 5MB)</p>
             </div>
 
-            <!-- Preview & Process -->
+            <!-- Preview & Process Section -->
             <div id="processSection" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <!-- Preview Sebelum -->
                     <div class="space-y-4">
                         <div class="flex items-center gap-2 px-2 text-slate-500 uppercase text-xs font-bold tracking-widest">
                             <i data-lucide="history" class="w-4 h-4"></i> Sebelum
@@ -66,6 +74,7 @@
                         </div>
                     </div>
 
+                    <!-- Preview Sesudah (AI) -->
                     <div class="space-y-4">
                         <div class="flex items-center gap-2 px-2 text-blue-600 uppercase text-xs font-bold tracking-widest">
                             <i data-lucide="zap" class="w-4 h-4"></i> Hasil AI
@@ -73,12 +82,13 @@
                         <div id="outputContainer" class="img-container shadow-inner">
                             <img id="outputImage" class="w-full h-full object-contain p-2 hidden" src="" alt="Result">
                             
-                            <!-- Custom Loading State -->
+                            <!-- Loading State -->
                             <div id="loadingState" class="hidden flex flex-col items-center gap-4">
                                 <span class="loader"></span>
                                 <p class="text-blue-600 font-bold animate-pulse">Sedang Menjernihkan...</p>
                             </div>
                             
+                            <!-- Placeholder -->
                             <div id="placeholderText" class="text-slate-400 text-sm flex flex-col items-center gap-2">
                                 <i data-lucide="cpu" class="w-8 h-8 opacity-20"></i>
                                 <span class="italic font-medium">Klik tombol di bawah untuk memproses</span>
@@ -87,6 +97,7 @@
                     </div>
                 </div>
 
+                <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
                     <button id="upscaleBtn" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-40">
                         <i data-lucide="wand-2" class="w-5 h-5"></i> Proses Sekarang
@@ -98,16 +109,17 @@
             </div>
         </div>
 
-        <!-- Footer Info -->
+        <!-- Footer -->
         <p class="text-center text-slate-400 text-sm font-medium">
             &copy; 2026 HidzScale AI Development - Built by Muhammad Wahid Rahman
         </p>
     </main>
 
     <script>
+        // Inisialisasi Lucide Icons
         lucide.createIcons();
 
-        // Theme Toggle Logic
+        // --- Logika Ganti Tema (Dark/Light Mode) ---
         const themeToggle = document.getElementById('themeToggle');
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
@@ -132,7 +144,7 @@
             moonIcon.classList.toggle('hidden');
         });
 
-        // App Logic
+        // --- Logika Aplikasi Upscaler ---
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const upscaleBtn = document.getElementById('upscaleBtn');
@@ -141,7 +153,7 @@
 
         dropZone.onclick = () => fileInput.click();
 
-        // Drag and Drop Effects
+        // Efek Drag and Drop
         ['dragover', 'dragenter'].forEach(e => {
             dropZone.addEventListener(e, () => dropZone.classList.add('drop-zone--over'));
         });
@@ -167,7 +179,6 @@
             document.getElementById('downloadBtn').classList.add('hidden');
             upscaleBtn.disabled = false;
             
-            // Scroll otomatis ke section preview
             processSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
@@ -179,6 +190,7 @@
                     reader.readAsDataURL(file);
                 });
 
+                // Endpoint API (Sesuaikan jika kamu punya server backend)
                 const response = await fetch('/api/upscale', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
