@@ -1,213 +1,47 @@
-/* Import Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
-
-:root {
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --bg-light: #f8fafc;
-    --bg-dark: #020617;
-    --card-light: rgba(255, 255, 255, 0.85);
-    --card-dark: rgba(15, 23, 42, 0.95);
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Scrollbar Custom */
+/* Scrollbar Modern */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
 }
-
 ::-webkit-scrollbar-track {
-    background: #e2e8f0;
-    border-radius: 10px;
+    background: #05070a;
 }
-
-.dark ::-webkit-scrollbar-track {
-    background: #1e293b;
-}
-
 ::-webkit-scrollbar-thumb {
-    background: #94a3b8;
+    background: #1e293b;
     border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
+/* Animasi Wavy Underline di Referensi */
+.underline-offset-8 {
+    text-underline-offset: 12px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-    background: #475569;
+/* Custom Glow Effect untuk tombol */
+#upscaleBtn {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-}
-
-/* Glassmorphism Effect */
-.glass-card {
-    background: var(--card-light);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.glass-card:hover {
-    box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.15);
-}
-
-.dark .glass-card {
-    background: var(--card-dark);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-}
-
-/* Hero Gradient Text */
-.gradient-text {
-    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #ec4899 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Custom Dropzone Animation */
-#dropZone {
-    transition: all 0.3s ease;
-    border-width: 2px;
-}
-
-#dropZone:hover {
-    transform: translateY(-3px);
-    border-color: var(--primary);
-    background: rgba(37, 99, 235, 0.04);
-}
-
-.drop-zone--over {
-    border-color: var(--primary) !important;
-    background: rgba(37, 99, 235, 0.08) !important;
-    transform: scale(1.01);
-}
-
-/* Image Preview Styling */
-.img-container {
-    position: relative;
-    border-radius: 1.25rem;
-    overflow: hidden;
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-    height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.dark .img-container {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-}
-
-/* Loading Spinner */
-.loader {
-    width: 48px;
-    height: 48px;
-    border: 4px solid #e2e8f0;
-    border-bottom-color: var(--primary);
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-}
-
-.dark .loader {
-    border: 4px solid #334155;
-    border-bottom-color: var(--primary);
-}
-
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Smooth Buttons */
-.btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-    box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.4);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.btn-primary:hover::before {
-    left: 100%;
-}
-
-.btn-primary:hover:not(:disabled) {
+#upscaleBtn:hover {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -8px rgba(37, 99, 235, 0.6);
 }
 
-.btn-primary:active:not(:disabled) {
-    transform: translateY(0) scale(0.98);
+/* Style saat dark mode (opsional jika ingin toggle) */
+.light-mode {
+    background-color: #f8fafc;
+    color: #020617;
 }
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.light-mode #placeholder {
+    color: #e2e8f0;
 }
-
-@keyframes slideInFromBottom {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-in {
-    animation: fadeIn 0.5s ease-out;
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-out;
-}
-
-.slide-in-from-bottom-4 {
-    animation: slideInFromBottom 0.5s ease-out;
-}
-
-/* Image Transition */
-#inputPreview, #outputImage {
-    transition: all 0.3s ease;
-}
-
-/* Button disable state */
-.btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+.light-mode .bg-[#0f1218] {
+    background-color: #ffffff;
+    border-color: #e2e8f0;
 }
