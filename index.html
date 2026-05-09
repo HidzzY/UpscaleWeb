@@ -4,21 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Upscaler | Jernihkan Gambar Instan</title>
-    <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // PENTING: Konfigurasi agar Tailwind mendukung ganti tema manual lewat class
         tailwind.config = {
             darkMode: 'class',
         }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="styl.css">
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen">
 
-    <!-- Navbar -->
     <nav class="sticky top-0 z-50 backdrop-blur-md border-b border-slate-200/50 dark:border-white/5">
         <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -28,7 +24,6 @@
                 <span class="font-bold text-2xl tracking-tight uppercase italic">Hidz<span class="text-blue-600">Scale</span></span>
             </div>
             
-            <!-- Tombol Theme Toggle -->
             <button id="themeToggle" class="group p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-blue-500 transition-all shadow-sm">
                 <i data-lucide="sun" id="sunIcon" class="w-5 h-5 group-hover:rotate-45 transition-transform"></i>
                 <i data-lucide="moon" id="moonIcon" class="hidden w-5 h-5 group-hover:-rotate-12 transition-transform"></i>
@@ -36,7 +31,6 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-6 py-16">
         <div class="text-center mb-16 space-y-4">
             <h1 class="text-5xl md:text-6xl font-black tracking-tight leading-tight">
@@ -48,7 +42,6 @@
             </p>
         </div>
 
-        <!-- Upload Section -->
         <div class="glass-card rounded-[2.5rem] p-4 md:p-10 mb-12">
             <div id="dropZone" class="group h-80 rounded-[2rem] border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center cursor-pointer mb-8 relative overflow-hidden">
                 <input type="file" id="fileInput" class="hidden" accept="image/*">
@@ -58,37 +51,32 @@
                 </div>
                 
                 <h3 class="text-2xl font-bold mb-2">Pilih atau seret gambar</h3>
-                <p class="text-slate-400 font-medium">JPG, PNG atau WEBP (Maks. 5MB)</p>
+                <p class="text-slate-400 font-medium">JPG, PNG atau WEBP (Max. 5MB)</p>
             </div>
 
-            <!-- Preview & Process Section -->
             <div id="processSection" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                    <!-- Preview Sebelum -->
                     <div class="space-y-4">
                         <div class="flex items-center gap-2 px-2 text-slate-500 uppercase text-xs font-bold tracking-widest">
-                            <i data-lucide="history" class="w-4 h-4"></i> Sebelum
+                            <i data-lucide="history" class="w-4 h-4"></i> Sebelum/Before
                         </div>
                         <div class="img-container shadow-inner">
                             <img id="inputPreview" class="w-full h-full object-contain p-2" src="" alt="Original">
                         </div>
                     </div>
 
-                    <!-- Preview Sesudah (AI) -->
                     <div class="space-y-4">
                         <div class="flex items-center gap-2 px-2 text-blue-600 uppercase text-xs font-bold tracking-widest">
-                            <i data-lucide="zap" class="w-4 h-4"></i> Hasil AI
+                            <i data-lucide="zap" class="w-4 h-4"></i> Hasil/After
                         </div>
                         <div id="outputContainer" class="img-container shadow-inner">
                             <img id="outputImage" class="w-full h-full object-contain p-2 hidden" src="" alt="Result">
                             
-                            <!-- Loading State -->
                             <div id="loadingState" class="hidden flex flex-col items-center gap-4">
                                 <span class="loader"></span>
-                                <p class="text-blue-600 font-bold animate-pulse">Sedang Menjernihkan...</p>
+                                <p class="text-blue-600 font-bold animate-pulse">Proses Deer...</p>
                             </div>
                             
-                            <!-- Placeholder -->
                             <div id="placeholderText" class="text-slate-400 text-sm flex flex-col items-center gap-2">
                                 <i data-lucide="cpu" class="w-8 h-8 opacity-20"></i>
                                 <span class="italic font-medium">Klik tombol di bawah untuk memproses</span>
@@ -100,26 +88,23 @@
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
                     <button id="upscaleBtn" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-40">
-                        <i data-lucide="wand-2" class="w-5 h-5"></i> Proses Sekarang
+                        <i data-lucide="wand-2" class="w-5 h-5"></i> Gas Upscale
                     </button>
                     <a id="downloadBtn" class="hidden bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/30">
-                        <i data-lucide="download-cloud" class="w-5 h-5"></i> Simpan Hasil
+                        <i data-lucide="download-cloud" class="w-5 h-5"></i> Download Hasil
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
         <p class="text-center text-slate-400 text-sm font-medium">
-            &copy; 2026 HidzScale AI Development - Built by Muhammad Wahid Rahman
+            &copy; 2026 Upscale Image - By HidzzY
         </p>
     </main>
 
     <script>
-        // Inisialisasi Lucide Icons
         lucide.createIcons();
 
-        // --- Logika Ganti Tema (Dark/Light Mode) ---
         const themeToggle = document.getElementById('themeToggle');
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
@@ -144,7 +129,6 @@
             moonIcon.classList.toggle('hidden');
         });
 
-        // --- Logika Aplikasi Upscaler ---
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const upscaleBtn = document.getElementById('upscaleBtn');
@@ -153,7 +137,6 @@
 
         dropZone.onclick = () => fileInput.click();
 
-        // Efek Drag and Drop
         ['dragover', 'dragenter'].forEach(e => {
             dropZone.addEventListener(e, () => dropZone.classList.add('drop-zone--over'));
         });
@@ -190,7 +173,6 @@
                     reader.readAsDataURL(file);
                 });
 
-                // Endpoint API (Sesuaikan jika kamu punya server backend)
                 const response = await fetch('/api/upscale', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -200,7 +182,7 @@
                     })
                 });
 
-                if (!response.ok) throw new Error('API sedang sibuk, coba sesaat lagi.');
+                if (!response.ok) throw new Error('Server sedang sibuk, coba sesaat lagi.');
 
                 const blob = await response.blob();
                 return URL.createObjectURL(blob);
