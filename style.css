@@ -1,47 +1,105 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-light: #f8fafc;
+    --bg-dark: #020617;
+    --card-light: rgba(255, 255, 255, 0.8);
+    --card-dark: rgba(15, 23, 42, 0.9);
+}
 
 body {
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Scrollbar Modern */
-::-webkit-scrollbar {
-    width: 6px;
-}
-::-webkit-scrollbar-track {
-    background: #05070a;
-}
-::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 10px;
+/* Glassmorphism Effect */
+.glass-card {
+    background: var(--card-light);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
 }
 
-/* Animasi Wavy Underline di Referensi */
-.underline-offset-8 {
-    text-underline-offset: 12px;
+.dark .glass-card {
+    background: var(--card-dark);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
 }
 
-/* Custom Glow Effect untuk tombol */
-#upscaleBtn {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* Hero Gradient Text */
+.gradient-text {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-#upscaleBtn:hover {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+/* Custom Dropzone Animation */
+#dropZone {
+    transition: all 0.3s ease;
+    border-width: 2px;
+}
+
+#dropZone:hover {
     transform: translateY(-2px);
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.05);
 }
 
-/* Style saat dark mode (opsional jika ingin toggle) */
-.light-mode {
-    background-color: #f8fafc;
-    color: #020617;
+.drop-zone--over {
+    border-color: var(--primary) !important;
+    background: rgba(37, 99, 235, 0.1) !important;
+    transform: scale(1.02);
 }
-.light-mode #placeholder {
-    color: #e2e8f0;
+
+/* Image Preview Styling */
+.img-container {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #e2e8f0;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.light-mode .bg-[#0f1218] {
-    background-color: #ffffff;
-    border-color: #e2e8f0;
+
+.dark .img-container {
+    background: #1e293b;
+}
+
+/* Loading Spinner */
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: var(--primary);
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Smooth Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.5);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
 }
